@@ -55,7 +55,7 @@
       phx_target: @myself,
       phx_change: "change",
       disabled: @disabled,
-      readonly: @mode == :single && Enum.any?(@selection),
+      readonly: @clear_input_on_focus && @mode == :single && Enum.any?(@selection),
       autocomplete: "off",
       phx_focus: "focus",
       phx_click: "click",

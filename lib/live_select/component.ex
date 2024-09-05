@@ -16,6 +16,7 @@ defmodule LiveSelect.Component do
     available_option_class: nil,
     clear_button_class: nil,
     clear_button_extra_class: nil,
+    clear_input_on_focus: true,
     clear_tag_button_class: nil,
     clear_tag_button_extra_class: nil,
     user_defined_options: false,
@@ -198,7 +199,11 @@ defmodule LiveSelect.Component do
       socket
       |> then(
         &if &1.assigns.mode == :single do
-          clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
+          if &1.assigns.clear_input_on_focus do
+            clear(&1, %{input_event: false, parent_event: &1.assigns[:"phx-focus"]})
+          else
+            &1
+          end
         else
           parent_event(&1, &1.assigns[:"phx-focus"], %{id: &1.assigns.id})
         end
