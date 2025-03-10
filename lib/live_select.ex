@@ -35,6 +35,14 @@ defmodule LiveSelect do
 
   The selected entries will be passed to your live view's `change` and `submit` event handlers as a list of entries, just like an [HTML <select> element with multiple attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple) would do.
 
+  ## Quick tags mode
+
+  <img alt="demo" src="https://raw.githubusercontent.com/maxmarcon/live_select/main/priv/static/images/demo_quick_tags.gif" width="300" />
+
+  When `:quick_tags` mode is enabled, the user can select multiple entries, but the dropdown stays open after selection.
+  This allows the user to select additional entries in quick succession. Also, the entries can be deselected via the dropdown (as well as by clicking on the removable tags).
+  The dropdown closes when the `LiveSelect` element loses focus.
+
   ## Options
 
   You can set the initial list of options the user can choose from with the `options` assign.
@@ -95,6 +103,9 @@ defmodule LiveSelect do
   ## Slots
 
   You can control how your options and tags are rendered by using the `:option` and `:tag` slots.
+  Both slots will be passed an option as argument. In the case of the `:option` slot, the option will have an
+  extra boolean field `:selected`, which will be set to `true` if the option has been selected by the user.
+
   Let's say you want to show some fancy icons next to each option in the dropdown and the tags:
 
   ```elixir
@@ -370,9 +381,10 @@ defmodule LiveSelect do
       ~S(an id to assign to the component. If none is provided, `#{form_name}_#{field}_live_select_component` will be used)
 
   attr :mode, :atom,
-    values: [:single, :tags],
+    values: [:single, :tags, :quick_tags],
     default: Component.default_opts()[:mode],
-    doc: "either `:single` (for single selection), or `:tags` (for multiple selection using tags)"
+    doc:
+      "either `:single` (for single selection), `:tags` (for multiple selection using tags), or `:quick_tags` (multiple selection but tags can be selected/deselected in quick succession)"
 
   attr :options, :list,
     doc:
@@ -506,11 +518,13 @@ defmodule LiveSelect do
     [%{"name" => "New York City","pos" => [-74.00597,40.71427]}, %{"name" => "Stockholm","pos" => [18.06871,59.32938]}]
   """
   def decode(selection) do
+    json = Phoenix.json_library()
+
     case selection do
       nil -> []
       "" -> nil
-      selection when is_list(selection) -> Enum.map(selection, &Jason.decode!/1)
-      selection -> Jason.decode!(selection)
+      selection when is_list(selection) -> Enum.map(selection, &json.decode!/1)
+      selection -> json.decode!(selection)
     end
   end
 end
