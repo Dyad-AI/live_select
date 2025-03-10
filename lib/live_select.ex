@@ -407,7 +407,8 @@ defmodule LiveSelect do
 
   attr :clear_input_on_focus, :boolean,
     default: Component.default_opts()[:clear_input_on_focus],
-    doc: "if `true`, when in single mode, clears the input to start when it gets focused. Default: `true`"
+    doc:
+      "if `true`, when in single mode, clears the input to start when it gets focused. Default: `true`"
 
   attr :disabled, :boolean, doc: "set this to `true` to disable the input field"
 

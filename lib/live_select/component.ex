@@ -291,7 +291,8 @@ defmodule LiveSelect.Component do
   end
 
   @impl true
-  def handle_event("keydown", %{"key" => tab_or_enter}, socket) when tab_or_enter in ["Enter", "Tab"] do
+  def handle_event("keydown", %{"key" => tab_or_enter}, socket)
+      when tab_or_enter in ["Enter", "Tab"] do
     {:noreply, maybe_select(socket)}
   end
 
